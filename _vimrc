@@ -212,10 +212,10 @@ Bundle 'hallettj/jslint.vim'
 Bundle 'gregsexton/MatchTag'
 Bundle 'scrooloose/nerdcommenter'
 
-Bundle 'SirVer/ultisnips'
-let g:UltiSnipsExpandTrigger="<C-CR>"
-let g:UltiSnipsJumpForwardTrigger="<C-tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"Bundle 'SirVer/ultisnips'
+"let g:UltiSnipsExpandTrigger="<C-CR>"
+"let g:UltiSnipsJumpForwardTrigger="<C-tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 "Bundle 'Valloric/YouCompleteMe'
 
 Bundle 'scrooloose/syntastic'
