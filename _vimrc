@@ -288,8 +288,8 @@ nmap S <Plug>SneakBackward
 
 Bundle 'nvie/vim-flake8'
 Bundle 'nvie/vim-pyunit'
-Bundle 'klen/python-mode'
-let g:pymode_run_bind = '<leader>pr'
+"Bundle 'klen/python-mode'
+"let g:pymode_run_bind = '<leader>pr'
 Bundle 'klen/rope-vim'
 " Omnisharp {{{
 
