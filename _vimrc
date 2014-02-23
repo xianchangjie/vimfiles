@@ -200,15 +200,17 @@ nnoremap <leader>r :CtrlPMRUFiles<cr>
 nnoremap <leader><Space> :CtrlP<cr>
 "}}}
 
-Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'vim-pandoc/vim-pandoc'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-repeat'
 "Bundle 'Raimondi/delimitMate'
 Bundle 'kana/vim-smartinput'
 Bundle 'nathanaelkane/vim-indent-guides'
+let g:indent_guides_guide_size = 1
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
+
 Bundle 'sjl/gundo.vim'
-Bundle 'hallettj/jslint.vim'
 Bundle 'gregsexton/MatchTag'
 Bundle 'scrooloose/nerdcommenter'
 
@@ -220,6 +222,12 @@ Bundle 'scrooloose/nerdcommenter'
 
 Bundle 'scrooloose/syntastic'
 let g:syntastic_python_checkers = ['pylama']
+let g:syntastic_javascript_checkers = ['jshint']
+nnoremap <leader>j :lnext<cr>
+nnoremap <leader>k :lprev<cr>
+let g:syntastic_mode_map = { 'mode': 'active',
+            \ 'active_filetypes': ['javascript', 'python', 'json'],
+            \ 'passive_filetypes': [] }
 
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'raghur/vim-colorschemes'
@@ -278,7 +286,7 @@ call yankstack#setup()
 
 " vim sneak; replace f/F with sneak
 Bundle 'justinmk/vim-sneak'
- "replace 'f' with inclusive 1-char Sneak
+"replace 'f' with inclusive 1-char Sneak
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
 xmap f <Plug>Sneak_f
