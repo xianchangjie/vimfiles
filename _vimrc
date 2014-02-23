@@ -407,11 +407,6 @@ nnoremap k gk
 "}}}
 
 " Autocommands {{{
-
-if has("gui_running")
-    au WinLeave * set nocursorline
-    au WinEnter * set cursorline
-endif
 augroup Markdown
     autocmd FileType markdown setl wrap
                 \ linebreak
