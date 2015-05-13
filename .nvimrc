@@ -194,26 +194,23 @@ NeoBundle 'raghur/vim-helpnav', {
 NeoBundle 'vim-scripts/L9'
 " CtrlP{{{
 NeoBundle 'kien/ctrlp.vim', {
-    \ 'lazy': 1,
-    \ 'depends': 'FelikZ/ctrlp-py-matcher',
+    \ 'lazy': 0,
     \ 'autoload': {
     \       'commands': ['CtrlP', 'CtrlPMixed', 'CtrlPMRUFiles', 'CtrlPQuickfix', 'CtrlPBuffer']
     \   }
     \}
-"let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 let g:ctrlp_match_window_bottom = 0
 let g:ctrlp_match_window_reversed = 0
 let g:ctrlp_max_height = 10
 let g:ctrlp_tabpage_position = 'al'
 let g:ctrlp_open_multi = '1t'
 let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'dir']
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_cache_dir = $HOME.'/.ctrlp_cache'
+let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_mruf_exclude = '\(.*\\dev\\shm\\pass\..*\)|\(.*\\.git\COMMIT_EDITMSG\)' " Windows
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|pyc)$'
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_use_caching = 1
+let g:ctrlp_use_caching = 0
 let g:ctrlp_clear_cache_on_exit = 1
 let g:ctrlp_cache_dir = expand(g:home.".vimbackups/ctrlp")
 
@@ -228,7 +225,6 @@ nnoremap <leader>q :wq<cr>
 nnoremap <leader>w :w<cr>
 nnoremap <leader>o :on<cr>
 nnoremap <leader>. @:
-nnoremap <leader><Space> :CtrlP<cr>
 nnoremap <leader>n :call NextErrorOrLocation("next")<cr>
 nnoremap <leader>p :call NextErrorOrLocation("prev")<cr>
 nmap <leader>gf :CtrlP<CR><C-\>w
@@ -457,6 +453,9 @@ if (has('win32unix'))
 else
     let g:session_directory=g:home.".vimbackups/.sessions"
 endif
+if (has('nvim'))
+    let g:session_directory="~/.nvim/.vimbackups/.sessions"
+endif
 let g:session_command_aliases = 1
 let g:session_autosave='yes'
 let g:session_autoload='yes'
@@ -503,7 +502,7 @@ vnoremap < <gv
 nnoremap 0 ^
 nnoremap ^ 0
 noremap <C-s> :w<cr>
-nnoremap <leader>sv :ed ~/.vim/_vimrc<cr>
+nnoremap <leader>sv :ed ~/.nvim/.nvimrc<cr>
 nnoremap <F5> :GundoToggle<CR>
 vnoremap <leader>v "0p
 " copy a block and comment it and move to insert mode
@@ -567,12 +566,12 @@ let g:formatprg_xml="xmllint"
 let g:formatprg_args_xml=" --format --recover - 2>/dev/null"
 
 " Windows specific {{{
-if (has('win32'))
-    set renderoptions=type:directx,gamma:1.0,contrast:0.2,level:1.0,geom:1,renmode:5,taamode:1
-    let g:formatprg_cs=fnamemodify(findfile(g:formatprg_cs . ".exe", $GNUWIN."/**3"), ":p")
-    let g:formatprg_html=fnamemodify(findfile(g:formatprg_html . ".exe", $GNUWIN."/**3"), ":p")
-    let g:formatprg_xml=fnamemodify(findfile(g:formatprg_xml . ".exe", $GNUWIN."/**3"), ":p")
-endif
+"if (has('win32'))
+"    set renderoptions=type:directx,gamma:1.0,contrast:0.2,level:1.0,geom:1,renmode:5,taamode:1
+"    let g:formatprg_cs=fnamemodify(findfile(g:formatprg_cs . ".exe", $GNUWIN."/**3"), ":p")
+"    let g:formatprg_html=fnamemodify(findfile(g:formatprg_html . ".exe", $GNUWIN."/**3"), ":p")
+"    let g:formatprg_xml=fnamemodify(findfile(g:formatprg_xml . ".exe", $GNUWIN."/**3"), ":p")
+"endif
 "}}}
 
 fun! FormatFile()
