@@ -1,10 +1,17 @@
 " vim: fdm=marker:
 " Options {{{
+set shellcmdflag=/d\ /c
 if has('nvim')
     let g:home="~/.nvim/"
 else 
     let g:home="~/.vim/"
 endif
+exec("set rtp^=".g:home)
+if empty(glob(g:home. 'autoload/plug.vim'))
+    execute("silent !curl -kfLo ".expand(g:home. "autoload/plug.vim"). " --create-dirs ". "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim")
+    autocmd VimEnter * PlugInstall
+endif
+let g:plug_threads = 16
 set showmode
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -165,16 +172,12 @@ endif
 "}}}
 
 " Plugin Bundles and config {{{
-filetype off
-exec("set rtp^=".g:home)
-exec("set rtp+=".g:home."bundle/neobundle.vim/")
-call neobundle#begin(expand(g:home.'bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+call plug#begin(expand(g:home.'bundle/'))
 
-NeoBundle 'kshenoy/vim-signature'
+Plug 'kshenoy/vim-signature'
 nnoremap <leader>[ :call signature#GotoMark( "prev", "line", "alpha" )<CR>
 nnoremap <leader>] :call signature#GotoMark( "next", "line", "alpha" )<CR>
-NeoBundle 'jamessan/vim-gnupg', {
+Plug 'jamessan/vim-gnupg', {
     \   'lazy': 1,
     \   'autoload': {
     \       'filename_patterns' : ['\.gpg$', '\.asc$']
@@ -185,20 +188,12 @@ NeoBundle 'jamessan/vim-gnupg', {
 " To check: :sh, which gpg
 let g:GPGDefaultRecipients=['Raghu Rajagopalan']
 
-NeoBundle 'raghur/vim-helpnav', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['help']
-    \   }}
+Plug 'raghur/vim-helpnav', { 'for': ['help']}
 
-NeoBundle 'vim-scripts/L9'
+Plug 'vim-scripts/L9'
 " CtrlP{{{
-NeoBundle 'kien/ctrlp.vim', {
-    \ 'lazy': 1,
-    \ 'depends': 'FelikZ/ctrlp-py-matcher',
-    \ 'autoload': {
-    \       'commands': ['CtrlP', 'CtrlPMixed', 'CtrlPMRUFiles', 'CtrlPQuickfix', 'CtrlPBuffer']
-    \   }
+Plug 'kien/ctrlp.vim', {'on': 
+    \ ['CtrlP', 'CtrlPMixed', 'CtrlPMRUFiles', 'CtrlPQuickfix', 'CtrlPBuffer']
     \}
 "let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
 let g:ctrlp_match_window_bottom = 0
@@ -234,50 +229,51 @@ nnoremap <leader>p :call NextErrorOrLocation("prev")<cr>
 nmap <leader>gf :CtrlP<CR><C-\>w
 "}}}
 
-NeoBundle 'vim-pandoc/vim-pandoc'
-NeoBundle 'vim-pandoc/vim-pandoc-syntax'
+Plug 'vim-pandoc/vim-pandoc' 
+Plug 'vim-pandoc/vim-pandoc-syntax'
 let g:pandoc#syntax#codeblocks#embeds#langs = ["ruby","python","bash=sh","coffee", "css", "erb=eruby", "javascript", "js=javascript", "json=javascript", "ruby", "sass", "xml", "html"]
 
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
 let g:AutoPairsShortcutToggle = '\\'
-NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'nathanaelkane/vim-indent-guides'
+Plug 'jiangmiao/auto-pairs'
+Plug 'nathanaelkane/vim-indent-guides'
 let g:indent_guides_guide_size = 1
 let g:indent_guides_exclude_filetypes = ['help', 'nerdtree']
 if has("gui_running")
     let g:indent_guides_enable_on_vim_startup = 1
 endif
 
-NeoBundle 'sjl/gundo.vim', {
-            \            'lazy':1,
-            \            'autoload': {
-            \               'commands': "GundoToggle"
-            \           }
-            \}
-NeoBundle 'gregsexton/MatchTag'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'tyru/open-browser.vim'
+Plug 'sjl/gundo.vim', {'on' : ['GundoToggle']}
+"{
+            "\            'lazy':1,
+            "\            'autoload': {
+            "\               'commands': "GundoToggle"
+            "\           }
+            "\}
+Plug 'gregsexton/MatchTag'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tyru/open-browser.vim'
 "Plugin 'Valloric/YouCompleteMe'
 "let g:ycm_autoclose_preview_window_after_completion = 1
 "let g:ycm_autoclose_preview_window_after_insertion = 1
 "let g:ycm_auto_stop_csharp_server = 1
 "nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<cr>
 
-NeoBundle 'kristijanhusak/vim-multiple-cursors'
+Plug 'kristijanhusak/vim-multiple-cursors'
 " Called once right before you start selecting multiple cursors
-function! Multiple_cursors_before()
-  if exists(':NeoCompleteLock')==2
-    exe 'NeoCompleteLock'
-  endif
-endfunction
+"function! Multiple_cursors_before()
+  "if exists(':NeoCompleteLock')==2
+    "exe 'NeoCompleteLock'
+  "endif
+"endfunction
 
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-  if exists(':NeoCompleteUnlock')==2
-    exe 'NeoCompleteUnlock'
-  endif
-endfunction
+"" Called once only when the multiple selection is canceled (default <Esc>)
+"function! Multiple_cursors_after()
+  "if exists(':NeoCompleteUnlock')==2
+    "exe 'NeoCompleteUnlock'
+  "endif
+"endfunction
 
 "NeoBundle 'marijnh/tern_for_vim', {
 "\            'lazy':1,
@@ -287,15 +283,15 @@ endfunction
 "\}
 
 if has('python') || has('python3')
-    NeoBundle 'SirVer/ultisnips'
-    NeoBundle 'honza/vim-snippets'
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
     "let g:UltiSnipsUsePythonVersion=2
     let g:UltiSnipsSnippetsDir=g:home."UltiSnips"
     let g:UltiSnipsExpandTrigger="<c-cr>"
     let g:UltiSnipsListSnippets="<c-tab>"
 endif
 
-NeoBundle 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 let g:syntastic_python_checkers = ['pylama']
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_auto_loc_list = 1
@@ -304,29 +300,25 @@ let g:syntastic_mode_map = { 'mode': 'passive',
             \ 'active_filetypes': ['python', 'json', 'javascript'],
             \ 'passive_filetypes': [] }
 
-NeoBundle 'kchmck/vim-coffee-script'
+Plug 'kchmck/vim-coffee-script'
 " colorscheme bundles and repos
-NeoBundle 'raghur/vim-colorschemes'
-NeoBundle 'vim-scripts/Colour-Sampler-Pack'
-NeoBundle 'sickill/vim-monokai'
-NeoBundle 'jaromero/vim-monokai-refined'
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'chriskempson/base16-vim'
+Plug 'raghur/vim-colorschemes'
+Plug 'vim-scripts/Colour-Sampler-Pack'
+Plug 'sickill/vim-monokai'
+Plug 'jaromero/vim-monokai-refined'
+Plug 'altercation/vim-colors-solarized'
+Plug 'chriskempson/base16-vim'
 let base16colorspace=256
 let g:solarized_termcolors=256
 
-NeoBundle 'pangloss/vim-javascript', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['javascript']
-    \   }}
+Plug 'pangloss/vim-javascript' 
 
 
-NeoBundle 'elzr/vim-json'
+Plug 'elzr/vim-json'
 let g:vim_json_syntax_conceal = 0
 
-NeoBundle 'jwhitley/vim-matchit.git'
-NeoBundle 'tpope/vim-ragtag'
+Plug 'jwhitley/vim-matchit'
+Plug 'tpope/vim-ragtag'
 
 "NeoBundle 'kana/vim-textobj-user'
 "NeoBundle 'sgur/vim-textobj-parameter'
@@ -334,55 +326,47 @@ NeoBundle 'tpope/vim-ragtag'
 "NeoBundle 'kana/vim-textobj-indent'
 "NeoBundle 'thinca/vim-textobj-between'
 "NeoBundle 'terryma/vim-expand-region'
-NeoBundle 'rstacruz/sparkup', {
-    \   'lazy': 1,
+Plug 'rstacruz/sparkup', {
     \   'rtp' : 'vim',
-    \   'autoload': {
-    \       'filetypes' : ['html']
-    \   }}
+    \   'for': ['html']
+    \ }
 
 " vim-airline and fonts
 set lazyredraw
 set laststatus=2
-NeoBundle 'bling/vim-airline'
+Plug 'bling/vim-airline'
 " line below has a trailing space.
-NeoBundle 'Lokaltog/powerline-fonts'
+Plug 'Lokaltog/powerline-fonts'
 let g:airline_enable_branch=1
 let g:airline_enable_syntastic=1
 let g:airline_powerline_fonts=1
 let g:airline_detect_modified=1
 
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'tpope/vim-markdown', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['markdown']
-    \   }}
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-markdown', {
+    \   'for': ['markdown']
+    \   }
 
-NeoBundle 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter'
 
 "neocomplete
 " run: nmake -f Make_msvc.mak nodebug=1
-NeoBundle 'Shougo/vimproc.vim'
+Plug 'Shougo/vimproc.vim'
 if has('lua')
-    NeoBundle 'Shougo/neocomplete', {
-        \ 'depends' : 'Shougo/context_filetype.vim',
-        \ 'disabled' : !has('lua'),
-        \ 'vim_version' : '7.3.885'
-        \ }
-    " Use neocomplete.
+    Plug 'Shougo/neocomplete'    " Use neocomplete.
+
     let g:neocomplete#use_vimproc = 1
     let g:neocomplete#enable_at_startup = 1
     exec("so ".g:home."neocomplete-custom.vim")
 endif
 let g:yankstack_yank_keys = ['c', 'C', 'd', 'D', 'x', 'X', 'y', 'Y']
-NeoBundle 'maxbrunsfeld/vim-yankstack'
+Plug 'maxbrunsfeld/vim-yankstack'
 
 " make sure this is after vim-yankstack
-NeoBundle 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 
 " vim sneak; replace f/F with sneak
-NeoBundle 'justinmk/vim-sneak'
+Plug 'justinmk/vim-sneak'
 "replace 'f' with 1-char Sneak
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -394,9 +378,8 @@ let g:sneak#s_next = 0
 
 "let g:stopFirstAndNotifyTimeoutLen = 0
 let g:EnhancedJumps_CaptureJumpMessages = 0
-NeoBundle 'vim-scripts/EnhancedJumps', {
-    \   'depends': 'vim-scripts/ingo-library'
-    \   }
+Plug 'vim-scripts/ingo-library'
+Plug 'vim-scripts/EnhancedJumps'
 nmap <backspace> <Plug>EnhancedJumpsOlder
 nmap <C-backspace> <Plug>EnhancedJumpsRemoteOlder
 nmap <C-tab> <Plug>EnhancedJumpsRemoteNewer
@@ -405,35 +388,11 @@ nmap <C-tab> <Plug>EnhancedJumpsRemoteNewer
 
 "NeoBundle 'justinmk/vim-gtfo'
 
-NeoBundle 'PProvost/vim-ps1', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['powershell', 'ps1']
-    \   }}
-
-NeoBundle 'nvie/vim-flake8', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['python']
-    \   }}
-
-NeoBundle 'nvie/vim-pyunit', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['python']
-    \   }}
-
-NeoBundle 'klen/python-mode', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['python']
-    \   }}
-
-NeoBundle 'python-rope/ropevim', {
-    \   'lazy': 1,
-    \   'autoload': {
-    \       'filetypes' : ['python']
-    \   }}
+Plug 'PProvost/vim-ps1'
+Plug 'nvie/vim-flake8'
+Plug 'nvie/vim-pyunit'
+Plug 'klen/python-mode'
+Plug 'python-rope/ropevim'
 let g:pymode_run_bind = '<leader>pr'
 let g:pymode_rope = 1
 
@@ -450,8 +409,8 @@ if &term =~ '^screen'
   set <xLeft>=\e[1;*D
 endif
 
-NeoBundle 'xolox/vim-misc'
-NeoBundle 'xolox/vim-session'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
 if (has('win32unix'))
     let g:session_directory=g:home.".vimbackups/.cygsessions"
 else
@@ -461,11 +420,10 @@ let g:session_command_aliases = 1
 let g:session_autosave='yes'
 let g:session_autoload='yes'
 let g:session_default_to_last=1
-NeoBundle 'wellle/targets.vim'
+Plug 'wellle/targets.vim'
 
+call plug#end()
 set rtp+=$GOROOT/misc/vim
-call neobundle#end()
-filetype plugin indent on
 colors Monokai-Refined
 "}}}
 
@@ -809,5 +767,5 @@ function! NextErrorOrLocation(dir)
         echom "No location or error list"
     endif
 endfunction
-NeoBundleCheck
+"NeoBundleCheck
 "}}}
