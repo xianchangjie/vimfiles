@@ -857,4 +857,9 @@ function! NextErrorOrLocation(dir)
     endif
 endfunction
 NeoBundleCheck
+
+" Neovim-qt Guifont command, to change the font
+command -nargs=? Guifont call rpcnotify(0, 'Gui', 'SetFont', "<args>")
+" Set font on start
+let g:Guifont="Pragmata_Pro:h13"
 "}}}
