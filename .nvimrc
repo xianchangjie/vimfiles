@@ -1,6 +1,11 @@
 " vim: fdm=marker:
 " Options {{{
 let g:home=expand('<sfile>:p:h')."/"
+fun! s:createIfNotExists(dir)
+    if !isdirectory(a:dir)
+        call mkdir(a:dir, "p")
+    endif
+endfunction
 set showmode
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -12,6 +17,8 @@ set nocursorcolumn     " display incomplete commands
 set incsearch       " do incremental searching
 set encoding=utf-8
 set hidden
+map <space> <leader>
+set re=2    " use the new NFA engine
 set wildchar=<Tab> wildmenu
 set wildmode=longest,list
 set pastetoggle=<F11>
@@ -21,6 +28,7 @@ set guioptions-=r
 set guioptions+=R
 set timeout timeoutlen=1000 ttimeoutlen=100
 set undofile
+call s:createIfNotExists(g:home.".vimbackups/.undo")
 exec("set undodir=".g:home.".vimbackups/.undo")
 set undolevels=1000
 " required for yankstack
@@ -31,7 +39,10 @@ if has('mouse')
 endif
 " Backup Options {{{
 set backup        " keep a backup file
+
+call s:createIfNotExists(g:home.".vimbackups/.backup")
 exec("set backupdir=".g:home.".vimbackups/.backup")
+call s:createIfNotExists(g:home.".vimbackups/.swap")
 exec("set directory=".g:home.".vimbackups/.swap")
 "}}}
 set switchbuf=usetab
@@ -119,13 +130,14 @@ if &t_Co > 2 || has("gui_running")
     set hlsearch
 endif
 
+syntax sync minlines=256
+set synmaxcol=300
 set foldmethod=indent
 set foldopen=block,hor,mark,percent,quickfix,search,tag,undo,jump
 set foldnestmax=5
 set foldminlines=4
-set relativenumber
+"set relativenumber
 set nu
-map <space> <leader>
 " replace all instances in a line.
 set gdefault
 set colorcolumn=120
@@ -163,13 +175,17 @@ endif
 " Plugin Bundles and config {{{
 filetype off
 exec("set rtp^=".g:home)
+if !isdirectory(g:home."bundle/neobundle.vim") 
+    silent exec "!git clone https://github.com/shougo/neobundle.vim"." ".g:home."bundle/neobundle.vim"
+endif
 exec("set rtp+=".g:home."bundle/neobundle.vim/")
 call neobundle#begin(expand(g:home.'bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'kshenoy/vim-signature'
-nnoremap <leader>[ :call signature#GotoMark( "prev", "line", "alpha" )<CR>
-nnoremap <leader>] :call signature#GotoMark( "next", "line", "alpha" )<CR>
+nnoremap <S-F2>  :<C-U>call signature#mark#Goto("prev", "spot", "pos") <CR> \| zz
+nnoremap <F2>  :<C-U>call signature#mark#Goto("next", "spot", "pos") <CR> \| zz
+
 NeoBundle 'jamessan/vim-gnupg', {
     \   'lazy': 1,
     \   'autoload': {
@@ -225,7 +241,7 @@ function! s:unite_settings()
     inoremap <silent><buffer><expr> <C-v>     unite#do_action('right')
 endfunction
 autocmd FileType unite call s:unite_settings()
-nnoremap <silent> <leader><space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_mru file_rec/async:! buffer bookmark<cr><c-u>
+nnoremap <silent> <leader><space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async:! file_mru  buffer <cr><c-u>
 nnoremap <silent> <leader>r :<C-u>Unite -buffer-name=recent file_mru<cr>
 nnoremap <silent> <leader>/ :<C-u>Unite -buffer-name=files file_rec/async:! <cr>
 nnoremap <silent> <leader>y :<C-u>Unite -buffer-name=yanks history/yank<cr>
@@ -273,6 +289,7 @@ nnoremap <leader>q :wq<cr>
 nnoremap <leader>w :w<cr>
 nnoremap <leader>o :on<cr>
 nnoremap <leader>. @:
+nnoremap <leader>a :b#<cr>
 nnoremap <leader>n :call NextErrorOrLocation("next")<cr>
 nnoremap <leader>p :call NextErrorOrLocation("prev")<cr>
 "}}}
