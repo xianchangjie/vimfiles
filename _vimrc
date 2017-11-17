@@ -754,3 +754,4 @@ let g:airline_theme="kalisi"
 call Setfont(g:fonts[0])
 "}}}
 "
+set rtp+=~/code/vim-ghost
