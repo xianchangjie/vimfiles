@@ -791,3 +791,5 @@ call Setfont(g:fonts[0])
 "}}}
 "
 set rtp+=~/code/vim-ghost
+let timer = timer_start(500,
+            \ { -> execute("GhostStart") })
