@@ -783,3 +783,4 @@ call Setfont(g:fonts[0])
 
 let g:ghost_autostart=1
 set rtp+=~/code/vim-ghost
+set rtp+=D:/code/vim-ghost
