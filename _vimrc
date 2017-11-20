@@ -780,6 +780,6 @@ colors kalisi
 let g:airline_theme="kalisi"
 call Setfont(g:fonts[0])
 "}}}
+
+let g:ghost_autostart=1
 set rtp+=~/code/vim-ghost
-let timer = timer_start(500,
-            \ { -> execute("GhostStart") })
